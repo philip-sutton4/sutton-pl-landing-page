@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Sutton Family — sutton.pl</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=Geist:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #f7f5f2;
+        --surface: #ffffff;
+        --border: #e4e0da;
+        --ink: #1a1815;
+        --muted: #8a8480;
+        --accent: #2d5a3d; /* deep forest green */
+        --accent-l: #e8f0eb; /* light tint */
+        --radius: 14px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Geist", sans-serif;
+        font-weight: 300;
+        min-height: 100vh;
+      }
+
+      /* ── Top bar ── */
+      .topbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 22px 40px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        opacity: 0;
+        animation: fadeDown 0.5s 0.05s ease forwards;
+      }
+
+      .logo {
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 1.05rem;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .logo span {
+        color: var(--accent);
+      }
+
+      /* ── Hero ── */
+      header {
+        text-align: center;
+        padding: 90px 24px 72px;
+      }
+
+      .tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+        background: var(--accent-l);
+        padding: 5px 16px;
+        border-radius: 100px;
+        margin-bottom: 26px;
+        opacity: 0;
+        animation: fadeUp 0.55s 0.15s ease forwards;
+      }
+
+      h1 {
+        font-family: "Fraunces", serif;
+        font-weight: 300;
+        font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+        opacity: 0;
+        animation: fadeUp 0.55s 0.28s ease forwards;
+      }
+
+      h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .subtitle {
+        margin: 20px auto 0;
+        max-width: 420px;
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: var(--muted);
+        opacity: 0;
+        animation: fadeUp 0.55s 0.42s ease forwards;
+      }
+
+      /* ── Divider ── */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        max-width: 160px;
+        margin: 52px auto 64px;
+        opacity: 0;
+        animation: fadeUp 0.5s 0.5s ease forwards;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .divider-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* ── Grid ── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 0 24px 100px;
+      }
+
+      /* ── Card ── */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        transform: translateY(22px);
+        transition:
+          box-shadow 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .card:nth-child(1) {
+        animation: fadeUp 0.6s 0.52s ease forwards;
+      }
+      .card:nth-child(2) {
+        animation: fadeUp 0.6s 0.65s ease forwards;
+      }
+      .card:nth-child(3) {
+        animation: fadeUp 0.6s 0.78s ease forwards;
+      }
+      .card:nth-child(4) {
+        animation: fadeUp 0.6s 0.91s ease forwards;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+        box-shadow: 0 16px 48px rgba(45, 90, 61, 0.1);
+      }
+
+      /* Photo */
+      .card-photo {
+        position: relative;
+        height: 200px;
+        background: var(--accent-l);
+        overflow: hidden;
+      }
+
+      .card-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+
+      .card:hover .card-photo img {
+        transform: scale(1.05);
+      }
+
+      /* Initials fallback (shown when no real photo) */
+      .card-photo .initials {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 2.8rem;
+        color: var(--accent);
+        letter-spacing: -0.02em;
+        user-select: none;
+      }
+
+      /* Body */
+      .card-body {
+        padding: 26px 26px 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-profession {
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+
+      .card-name {
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 1.45rem;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+
+      .card-desc {
+        font-size: 0.875rem;
+        line-height: 1.75;
+        color: var(--muted);
+        flex: 1;
+        margin-bottom: 24px;
+      }
+
+      /* Link button */
+      .card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--surface);
+        background: var(--accent);
+        padding: 11px 20px;
+        border-radius: 8px;
+        align-self: flex-start;
+        transition:
+          background 0.22s,
+          gap 0.22s;
+      }
+
+      .card-link:hover {
+        background: #1e3f2b;
+        gap: 11px;
+      }
+
+      .card-link svg {
+        flex-shrink: 0;
+      }
+
+      /* ── Footer ── */
+      footer {
+        text-align: center;
+        border-top: 1px solid var(--border);
+        padding: 28px 24px 36px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 560px) {
+        header {
+          padding: 60px 20px 52px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          padding: 0 16px 72px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top bar -->
+    <nav class="topbar">
+      <a class="logo" href="/">sutton<span>.pl</span></a>
+    </nav>
+
+    <!-- Hero -->
+    <header>
+      <span class="tag">Family Domain</span>
+      <h1>The <em>Sutton</em><br />Family</h1>
+      <p class="subtitle">
+        One domain, four lives. Choose a family member below to explore their
+        work.
+      </p>
+      <div class="divider"><div class="divider-dot"></div></div>
+    </header>
+
+    <!-- Cards -->
+    <main class="grid">
+      <!-- Member 1 -->
+      <article class="card">
+        <div class="card-photo">
+          <img
+            src="https://i.pravatar.cc/400?img=53"
+            alt="Portrait of James Sutton"
+          />
+        </div>
+        <div class="card-body">
+          <p class="card-profession">Architect</p>
+          <h2 class="card-name">James Sutton</h2>
+          <p class="card-desc">
+            Designing spaces that balance function and beauty, with 15 years of
+            residential and commercial projects.
+          </p>
+          <a
+            class="card-link"
+            href="https://james.sutton.pl"
+            target="_blank"
+            rel="noopener"
+          >
+            james.sutton.pl
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Member 2 -->
+      <article class="card">
+        <div class="card-photo">
+          <img
+            src="https://i.pravatar.cc/400?img=44"
+            alt="Portrait of Claire Sutton"
+          />
+        </div>
+        <div class="card-body">
+          <p class="card-profession">Photographer</p>
+          <h2 class="card-name">Claire Sutton</h2>
+          <p class="card-desc">
+            Documentary and portrait photography — capturing honest moments and
+            the quiet beauty of everyday life.
+          </p>
+          <a
+            class="card-link"
+            href="https://claire.sutton.pl"
+            target="_blank"
+            rel="noopener"
+          >
+            claire.sutton.pl
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Member 3 -->
+      <article class="card">
+        <div class="card-photo">
+          <img
+            src="https://i.pravatar.cc/400?img=15"
+            alt="Portrait of Tom Sutton"
+          />
+        </div>
+        <div class="card-body">
+          <p class="card-profession">Software Developer</p>
+          <h2 class="card-name">Tom Sutton</h2>
+          <p class="card-desc">
+            Full-stack engineer building thoughtful web products, open-source
+            tools, and the occasional side project.
+          </p>
+          <a
+            class="card-link"
+            href="https://tom.sutton.pl"
+            target="_blank"
+            rel="noopener"
+          >
+            tom.sutton.pl
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Member 4 -->
+      <article class="card">
+        <div class="card-photo">
+          <img
+            src="https://i.pravatar.cc/400?img=36"
+            alt="Portrait of Sophie Sutton"
+          />
+        </div>
+        <div class="card-body">
+          <p class="card-profession">Graphic Designer</p>
+          <h2 class="card-name">Sophie Sutton</h2>
+          <p class="card-desc">
+            Brand identity and visual systems for small businesses and startups
+            that want to make a lasting impression.
+          </p>
+          <a
+            class="card-link"
+            href="https://sophie.sutton.pl"
+            target="_blank"
+            rel="noopener"
+          >
+            sophie.sutton.pl
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <a href="https://sutton.pl">sutton.pl</a> &nbsp;·&nbsp; A family domain
+    </footer>
+  </body>
+</html>
